@@ -1,4 +1,4 @@
-package newlang4;
+package interpreter;
 
 import java.io.FileInputStream;
 
@@ -15,18 +15,19 @@ public class Main {
 		Environment env;
 		Node program;
 
-		System.out.println("basic parser");
 		fin = new FileInputStream("input.bsc");
 		lex = new LexicalAnalyzerImpl(fin);
 		env = new Environment(lex);
 		first = lex.get();
+		lex.unget(first);
 
-		program = Variable.isMatch(env, first);
+		program = ProgramNode.isMatch(env, first);
 		if (program != null && program.Parse()) {
-			System.out.println(program);
-			System.out.println("value = " + program.getValue());
-		} else
+//			System.out.println(program);
+			program.getValue();
+		} else {
 			System.out.println("syntax error");
+		}
 	}
 
 }

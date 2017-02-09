@@ -1,4 +1,4 @@
-package newlang4;
+package lexicalAnalyzer;
 
 
 public class LexicalUnit {

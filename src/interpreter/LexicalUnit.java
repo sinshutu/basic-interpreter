@@ -1,4 +1,4 @@
-package newlang3;
+package interpreter;
 
 
 public class LexicalUnit {
@@ -8,6 +8,7 @@ public class LexicalUnit {
 
 	public LexicalUnit(LexicalType this_type) {
 	    type = this_type;
+	    value = new ValueImpl();
 	}
 	
 	public LexicalUnit(LexicalType this_type, Value this_value) {

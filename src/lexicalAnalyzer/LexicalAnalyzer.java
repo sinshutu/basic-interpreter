@@ -1,4 +1,4 @@
-package newlang3;
+package lexicalAnalyzer;
 
 import java.io.IOException;
 

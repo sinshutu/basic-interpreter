@@ -1,4 +1,4 @@
-package newlang4;
+package interpreter;
 
 public enum LexicalType {
 	LITERAL,	// 文字列定数 "文字列"

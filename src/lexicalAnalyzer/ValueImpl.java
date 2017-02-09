@@ -1,4 +1,4 @@
-package newlang3;
+package lexicalAnalyzer;
 
 public class ValueImpl implements Value {
 

@@ -1,4 +1,4 @@
-package newlang4;
+package interpreter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +51,7 @@ public class LexicalMap {
 	public LexicalType getLexicalType(String key) {
 		key = key.toUpperCase();
 		if (Main.debug)
-			System.out.println(lexicalMap.get(key));
+			System.out.println("Key: " + key + "getType: " + lexicalMap.get(key));
 
 		return lexicalMap.get(key);
 	}

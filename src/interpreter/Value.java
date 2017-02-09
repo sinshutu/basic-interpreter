@@ -1,4 +1,4 @@
-package newlang3;
+package interpreter;
 
 public interface Value {
 // �������ׂ��R���X�g���N�^

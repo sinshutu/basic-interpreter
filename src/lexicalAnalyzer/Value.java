@@ -1,4 +1,4 @@
-package newlang4;
+package lexicalAnalyzer;
 
 public interface Value {
 // �������ׂ��R���X�g���N�^

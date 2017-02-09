@@ -1,9 +1,10 @@
-package newlang4;
+package interpreter;
 
 public enum NodeType {
 	PROGRAM,
 	STMT_LIST,
 	STMT,
+	SUBST,
 	FOR_STMT,
 	ASSIGN_STMT,
 	BLOCK,
@@ -13,6 +14,8 @@ public enum NodeType {
     EXPR_LIST,
 	EXPR,
 	FUNCTION_CALL,
+	VAR,
+	FACT,
     STRING_CONSTANT,
     INT_CONSTANT,
     DOUBLE_CONSTANT,

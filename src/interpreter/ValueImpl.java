@@ -1,12 +1,17 @@
-package newlang4;
+package interpreter;
 
 public class ValueImpl implements Value {
 
 	private ValueType valueType = null;
 	private String sValue = "";
 	private int iValue = 0;
+	private double dValue = 0;
 	private boolean bValue = false;
-	
+
+	public ValueImpl() {
+		this.valueType = ValueType.VOID;
+	}
+
 	public ValueImpl(String value) {
 		this.sValue = value;
 		this.valueType = ValueType.STRING;
@@ -15,6 +20,11 @@ public class ValueImpl implements Value {
 	public ValueImpl(int value) {
 		this.iValue = value;
 		this.valueType = ValueType.INTEGER;
+	}
+
+	public ValueImpl(double value) {
+		this.dValue = value;
+		this.valueType = ValueType.DOUBLE;
 	}
 
 	public ValueImpl(boolean value) {
@@ -34,7 +44,7 @@ public class ValueImpl implements Value {
 
 	@Override
 	public double getDValue() {
-		return 0;
+		return this.dValue;
 	}
 
 	@Override
@@ -45,6 +55,25 @@ public class ValueImpl implements Value {
 	@Override
 	public ValueType getType() {
 		return this.valueType;
+	}
+
+	@Override
+	public String toString() {
+		switch (this.valueType) {
+		case VOID:
+			return null;
+		case STRING:
+			return this.getSValue();
+		case BOOL:
+			return this.getBValue() + "";
+		case INTEGER:
+			return this.getIValue() + "";
+		case DOUBLE:
+			return this.getDValue() + "";
+		default:
+			System.out.println("undefined value type");
+			return null;
+		}
 	}
 
 }

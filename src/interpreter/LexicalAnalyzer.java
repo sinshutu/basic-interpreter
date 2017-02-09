@@ -1,4 +1,4 @@
-package newlang4;
+package interpreter;
 
 import java.io.IOException;
 

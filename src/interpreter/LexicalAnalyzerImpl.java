@@ -1,9 +1,11 @@
-package newlang4;
+package interpreter;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PushbackReader;
+import java.io.Reader;
+import java.util.Stack;
 import java.util.regex.Pattern;
 
 public class LexicalAnalyzerImpl implements LexicalAnalyzer {
@@ -16,14 +18,28 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer {
 	private final Pattern isIgnore = Pattern.compile("[\t ]");
 	private final LexicalUnit eof = new LexicalUnit(LexicalType.EOF);
 
+	private Stack<LexicalUnit> next = new Stack<LexicalUnit>();
+
+	public LexicalAnalyzerImpl(Reader in) {
+		this.in = new PushbackReader(in);
+	}
+
 	public LexicalAnalyzerImpl(FileInputStream is) {
 		InputStreamReader ir = new InputStreamReader(is);
 		this.in = new PushbackReader(ir);
 	}
 
+	public int getStack() {
+		return next.size();
+	}
+
 	@Override
 	public LexicalUnit get() throws IOException {
-
+		// ungetされたものがあるか確認
+		if (next.size() > 0) {
+			LexicalUnit n = next.pop();
+			return n;
+		}
 		LexicalMap lm = new LexicalMap();
 		LexicalUnit lu = null;
 		int ch = in.read();
@@ -55,8 +71,7 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer {
 
 		} else if (isSymbol((char) ch)) { // 記号の場合
 			if (Main.debug)
-				System.out.print("isSymbol:");
-			// System.out.println(token);
+				System.out.println("isSymbol:" + token);
 			ch = in.read();
 			// System.out.println(ch);
 			while (true) {
@@ -67,7 +82,19 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer {
 					lu = new LexicalUnit(lm.getLexicalType(token));
 					break;
 				}
-				token += (char) ch;
+				if (isSymbol((char) ch)) {
+					LexicalType type = lm.getLexicalType(token + (char) ch);
+					if (type == null) {
+						in.unread(ch);
+						if (Main.debug)
+							System.out.println("type is null");
+					} else {
+						token += (char) ch;
+					}
+					lu = new LexicalUnit(lm.getLexicalType(token));
+					break;
+				}
+
 			}
 
 		} else if (isAlpha((char) ch)) { // 文字の場合
@@ -123,7 +150,7 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer {
 
 	@Override
 	public void unget(LexicalUnit token) {
-
+		next.push(token);
 	}
 
 	private boolean isIgnore(char c) {
@@ -143,8 +170,6 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer {
 	}
 
 	private boolean isNumbar(char c) {
-		if (Main.debug)
-			System.out.print(c);
 		return c >= '0' && c <= '9';
 	}
 

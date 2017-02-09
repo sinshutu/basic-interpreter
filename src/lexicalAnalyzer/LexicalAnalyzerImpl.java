@@ -1,6 +1,8 @@
-package newlang3;
+package lexicalAnalyzer;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.regex.Pattern;
@@ -17,6 +19,11 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer {
 
 	public LexicalAnalyzerImpl(Reader in) {
 		this.in = new PushbackReader(in);
+	}
+
+	public LexicalAnalyzerImpl(FileInputStream is) {
+		InputStreamReader ir = new InputStreamReader(is);
+		this.in = new PushbackReader(ir);
 	}
 
 	@Override
@@ -53,8 +60,7 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer {
 
 		} else if (isSymbol((char) ch)) { // 記号の場合
 			if (Main.debug)
-				System.out.print("isSymbol:");
-			// System.out.println(token);
+				System.out.println("isSymbol:" + token);
 			ch = in.read();
 			// System.out.println(ch);
 			while (true) {
@@ -65,7 +71,19 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer {
 					lu = new LexicalUnit(lm.getLexicalType(token));
 					break;
 				}
-				token += (char) ch;
+				if (isSymbol((char) ch)) {
+					LexicalType type = lm.getLexicalType(token + (char) ch);
+					if (type == null) {
+						in.unread(ch);
+						if (Main.debug)
+							System.out.println("type is null");
+					} else {
+						token += (char) ch;
+					}
+					lu = new LexicalUnit(lm.getLexicalType(token));
+					break;
+				}
+
 			}
 
 		} else if (isAlpha((char) ch)) { // 文字の場合
@@ -141,8 +159,6 @@ public class LexicalAnalyzerImpl implements LexicalAnalyzer {
 	}
 
 	private boolean isNumbar(char c) {
-		if (Main.debug)
-			System.out.print(c);
 		return c >= '0' && c <= '9';
 	}
 
